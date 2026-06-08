@@ -1,0 +1,64 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+*.s
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Backup files
+*-backup
+*.bak
+~*.lck
+\#auto_saved_files\#
+DEADJOE
+
+# compiled executables
+*.map
+
+# kicad
+*-backups
+*.kicad_pcb-bak
+*.kicad_prl
+*.sch-bak
+fp-info-cache
+
+# AVR related
+.avrdefs.h
+.timer-config
+_timer-config.h
+eeprom.bin*
+crccalc
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+# !.vscode/settings.json   # only if project-level settings exist
