@@ -1,0 +1,26 @@
+FROM python:3.12-slim AS builder
+WORKDIR /app
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends \
+            gcc build-essential patchelf ccache
+COPY image/requirements.txt .
+RUN pip install --upgrade pip && pip install --no-cache-dir nuitka -r requirements.txt
+COPY src/cert_manager.py .
+RUN python -m nuitka --standalone --onefile cert_manager.py
+
+
+
+FROM debian:bookworm-slim
+WORKDIR /app
+COPY --from=builder /app/cert_manager.bin ./cert_manager
+COPY image/entrypoint.sh /
+RUN chmod 755 /entrypoint.sh \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends \
+          gosu \
+          ca-certificates \
+ && groupadd -g 2000 certreaders \
+ && useradd -u 1001 -G certreaders -m certmgr
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["cert_manager"]

@@ -11,3 +11,19 @@ The application can be restarted by:
 - sending a signal to a process specified in a PID-file
 - restarting a docker container
 
+## How to build an image
+
+Currently the image can be built by **make**. There are 3 variants of the image:
+
+* normal image - contains python interpretter + source code
+
+  ``make``
+
+* pynstaller - contains precompiled bytecode 
+
+  ``make pynstaller``
+
+* nuitka - contains nuitka compiled true binary
+
+  ``make nuitka``
+
