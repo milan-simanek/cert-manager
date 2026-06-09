@@ -11,6 +11,7 @@ RUN mv entrypoint.sh / \
  && apt-get install -y --no-install-recommends \
           gosu \
           ca-certificates \
+          gcc \
           libffi-dev \
           libssl-dev \
           python3-dev \
