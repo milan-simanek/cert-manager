@@ -7,6 +7,20 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false	# let the other image finish even if one fails
+      matrix:
+        include:
+          - variant: normal
+            dockerfile: ./image/Dockerfile
+            tag-suffix: ""
+          - variant: pyinstaller
+            dockerfile: ./image/Dockerfile.pynstaller
+            tag-suffix: "pynstaller"
+          - variant: nuitka
+            dockerfile: ./image/Dockerfile.nuitka
+            tag-suffix: nuitka
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -14,7 +28,9 @@ jobs:
       - name: Check if the image already exists
         id: check
         run: |
+          SUFFIX=${{ matrix.tag-suffix }}
           TAG=$(cat image/tag)
+          [ -n "$SUFFIX" ] && TAG="${TAG}-${SUFFIX}"
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           if docker manifest inspect milansimanek/cert-manager:$TAG > /dev/null 2>&1
           then
@@ -50,16 +66,16 @@ jobs:
             type=raw,value=${{ steps.check.outputs.tag }}
 #            type=raw,value=latest
 
-      - name: Build and push
+      - name: Build and push - ${{ matrix.variant }}
         if: steps.check.outputs.build == 'true'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
-          file: image/Dockerfile
+          file: ${{ matrix.dockerfile }}
           platforms: linux/arm/v7,linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.variant }}
+          cache-to: type=gha,scope=${{ matrix.variant }},mode=max
           
