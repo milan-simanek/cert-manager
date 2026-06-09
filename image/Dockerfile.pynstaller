@@ -4,6 +4,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
           libffi-dev \
           libssl-dev \
+          gcc \ 
           python3-dev binutils
 COPY image/requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir pyinstaller -r requirements.txt
